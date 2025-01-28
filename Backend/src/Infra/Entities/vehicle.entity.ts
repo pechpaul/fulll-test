@@ -1,19 +1,16 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne} from 'typeorm';
+import {Entity, Column, ManyToOne, PrimaryColumn} from 'typeorm';
 import {Fleet} from "./fleet.entity";
 
 
 @Entity()
 export class Vehicle {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-
-    @Column()
+    @PrimaryColumn()
     plateNumber: string;
 
-    @Column()
+    @Column({ nullable: true })
     latitude: number;
 
-    @Column()
+    @Column({ nullable: true })
     longitude: number;
 
     @Column({ nullable: true })

@@ -1,6 +1,7 @@
 export class ParkVehicleCommand {
     constructor(
-        public readonly vehicleId: string,
-        public readonly location: [number, number]
+        public readonly vehiclePlateNumber: string,
+        public readonly lat: number,
+        public readonly lng: number,
     ) {}
 }

@@ -1,5 +1,12 @@
-import { Command } from 'commander';
-import {Fleet} from "./src/Domain/fleet";
+import {Command} from 'commander';
+import {AppDataSource} from "./src/Infra/dataSource";
+import {Vehicle} from "./src/Infra/Entities/vehicle.entity";
+import {Fleet} from "./src/Infra/Entities/fleet.entity";
+import {FleetService} from "./src/Domain/fleetService";
+
+const vehicleRepository = AppDataSource.getRepository(Vehicle);
+const fleetRepository = AppDataSource.getRepository(Fleet);
+const fleetService = new FleetService()
 
 const program = new Command();
 
@@ -8,9 +15,9 @@ program
     .argument('<userId>', 'User ID')
     .description('Create a new fleet for the user')
     .action(async (userId) => {
-        const fleet = new Fleet(userId);
+        const fleet = new Fleet();
         await fleetRepository.save(fleet)
-        console.log(`Fleet created with ID: ${fleetId}`);
+        console.log(`Fleet created with ID: ${fleet.id}`);
     });
 
 program
@@ -19,7 +26,7 @@ program
     .argument('<vehiclePlateNumber>', 'Vehicle Plate Number')
     .description('Register a vehicle to a fleet')
     .action(async (fleetId, vehiclePlateNumber) => {
-        await registerVehicle(fleetId, vehiclePlateNumber);
+        await fleetService.registerVehicle(fleetId, vehiclePlateNumber);
         console.log(`Vehicle ${vehiclePlateNumber} registered to fleet ${fleetId}`);
     });
 
@@ -32,8 +39,10 @@ program
     .argument('[alt]', 'Altitude')
     .description('Localize a vehicle to a specific location')
     .action(async (fleetId, vehiclePlateNumber, lat, lng, alt) => {
-        await localizeVehicle(fleetId, vehiclePlateNumber, { lat, lng, alt });
-        console.log(`Vehicle ${vehiclePlateNumber} localized to (${lat}, ${lng}, ${alt || 0})`);
+        const vehicle = await vehicleRepository.findOneBy({plateNumber: vehiclePlateNumber});
+        if (vehicle) {
+            console.log(`Vehicle ${vehiclePlateNumber} localized to (${vehicle.latitude}, ${vehicle.longitude}, ${vehicle.altitude || 0})`);
+        }
     });
 
 program.parse();

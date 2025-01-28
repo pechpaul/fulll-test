@@ -9,13 +9,14 @@
     "resolveJsonModule": true,        // Allow importing JSON files
     "moduleResolution": "node",       // Resolve modules like Node.js
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true, // Allow synthetic default imports
     "lib": ["ES2022", "DOM"],         // Include ES2022 and DOM library
     "forceConsistentCasingInFileNames": true, // Enforce consistent file casing
     "strictPropertyInitialization": false
   },
   "include": [
-    "src/**/*.ts", "main.ts"
+    "src/**/*.ts", "main.ts", "cli.ts"
   ],
   "exclude": ["node_modules", "dist"] // Exclude unnecessary directories
 }

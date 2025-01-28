@@ -1,26 +1,29 @@
 import { RegisterVehicleCommand } from '../../Command/vehicle/registerVehicle.command';
-import {Repository} from "typeorm";
 import {Vehicle} from "../../../Infra/Entities/vehicle.entity";
+import {AppDataSource} from "../../../Infra/dataSource";
 import {Fleet} from "../../../Infra/Entities/fleet.entity";
 
 export class RegisterVehicleHandler {
-    constructor(
-        private vehicleRepository: Repository<Vehicle>,
-        private fleetRepository: Repository<Fleet>
-    ) {}
 
     async handle(command: RegisterVehicleCommand) {
-        const fleet = await this.fleetRepository.findById(command.fleetId);
+        const vehicleRepository = AppDataSource.getRepository(Vehicle);
+        const fleetRepository = AppDataSource.getRepository(Fleet);
+        const fleet = await fleetRepository.findOneBy({id: command.fleetId})
+
         if (!fleet) {
             throw new Error('Fleet does not exist');
         }
 
-        const vehicle = await this.vehicleRepository.findById(command.vehicleId);
-        if (vehicle && fleet.isVehicleRegistered(vehicle.id)) {
-            throw new Error(`this vehicle is already registered: ${command.vehicleId}`);
+        const vehicle = await vehicleRepository.findOneBy({plateNumber:command.plateNumber});
+        if(!vehicle){
+            throw new Error(`Vehicle ${command.plateNumber} doesn't exist`);
         }
 
-        fleet.registerVehicle(command.vehicleId);
-        await this.fleetRepository.save(fleet);
+        if (vehicle && fleet.vehicles.map((vehicle: Vehicle)=>vehicle.plateNumber).includes(vehicle.plateNumber)) {
+            throw new Error(`this vehicle is already registered: ${command.plateNumber}`);
+        }
+
+        fleet.vehicles.push(vehicle)
+        await fleetRepository.save(fleet);
     }
 }
