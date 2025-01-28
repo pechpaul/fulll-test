@@ -1,11 +1,12 @@
 import { RegisterVehicleCommand } from '../../Command/vehicle/registerVehicle.command';
-import { VehicleRepository } from '../../../Infra/vehicle.repository';
-import { FleetRepository } from '../../../Infra/fleet.repository';
+import {Repository} from "typeorm";
+import {Vehicle} from "../../../Infra/Entities/vehicle.entity";
+import {Fleet} from "../../../Infra/Entities/fleet.entity";
 
 export class RegisterVehicleHandler {
     constructor(
-        private vehicleRepository: VehicleRepository,
-        private fleetRepository: FleetRepository
+        private vehicleRepository: Repository<Vehicle>,
+        private fleetRepository: Repository<Fleet>
     ) {}
 
     async handle(command: RegisterVehicleCommand) {

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",                // Target modern JavaScript
+    "rootDir": "../Backend",               // Root directory for source files
+    "outDir": "./dist",               // Output directory for compiled files
+    "strict": true,                   // Enable strict type-checking
+    "esModuleInterop": true,          // Enable interoperability for CommonJS and ES modules
+    "skipLibCheck": true,             // Skip checking types of all declaration files
+    "resolveJsonModule": true,        // Allow importing JSON files
+    "moduleResolution": "node",       // Resolve modules like Node.js
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true, // Allow synthetic default imports
+    "lib": ["ES2022", "DOM"],         // Include ES2022 and DOM library
+    "forceConsistentCasingInFileNames": true, // Enforce consistent file casing
+    "strictPropertyInitialization": false
+  },
+  "include": [
+    "src/**/*.ts", "main.ts"
+  ],
+  "exclude": ["node_modules", "dist"] // Exclude unnecessary directories
+}

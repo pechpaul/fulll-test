@@ -3,28 +3,30 @@ import { RegisterVehicleCommand } from '../../App/Command/vehicle/registerVehicl
 import { RegisterVehicleHandler } from '../../App/Handler/vehicle/registerVehicle.handler';
 import { ParkVehicleCommand } from '../../App/Command/vehicle/parkVehicle.command';
 import { ParkVehicleHandler } from '../../App/Handler/vehicle/parkVehicle.handler';
-import { Fleet } from '../../Domain/fleet';
-import { Vehicle } from '../../Domain/vehicle';
+import { FleetService } from '../../Domain/fleet';
+import { VehicleService } from '../../Domain/vehicle';
 import { VehicleRepository } from '../../Infra/vehicle.repository';
 import { FleetRepository } from '../../Infra/fleet.repository';
+import {Fleet} from "../../Infra/Entities/fleet.entity";
+import {Vehicle} from "../../Infra/Entities/vehicle.entity";
 const assert = require('assert');
 
 let vehicleRepository: VehicleRepository = new VehicleRepository();
 let fleetRepository: FleetRepository = new FleetRepository();
 let registerVehicleHandler: RegisterVehicleHandler = new RegisterVehicleHandler(vehicleRepository, fleetRepository);
 let parkVehicleHandler: ParkVehicleHandler = new ParkVehicleHandler(vehicleRepository);
-let myFleet : Fleet;
+let myFleet: Fleet;
 let aVehicle: Vehicle;
 let aLocation: [number, number];
 let command: ParkVehicleCommand;
 
 Given('my fleet for parking', async () => {
-    myFleet = new Fleet('fleet1')
+    myFleet = new Fleet()
     await fleetRepository.save(myFleet)
 });
 
 Given('a vehicle for parking', async () => {
-    aVehicle = new Vehicle('vehicle1')
+    aVehicle = new Vehicle()
     await vehicleRepository.save(aVehicle)
 });
 

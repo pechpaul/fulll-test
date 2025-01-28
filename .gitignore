@@ -1,1 +1,4 @@
 /.idea/
+/Backend/package-lock.json
+/Backend/node_modules/
+/Backend/**/**.js
