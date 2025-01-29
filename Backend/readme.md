@@ -7,6 +7,10 @@ To install the project, you just have to run `npm install` to get all the depend
 # Running the tests
 After installing the dependencies you can run the tests with this command `npm run test`.
 
+# Running the cli
+npm run cli -- create <userId>
+npm run cli -- register-vehicle <fleetId> <vehiclePlateNumber>
+npm run cli -- localize-vehicle <fleetId> <vehiclePlateNumber> <lat> <lng>
 
 ### Step 3
 
