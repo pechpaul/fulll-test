@@ -11,7 +11,7 @@ export class ParkVehicleHandler {
         }
 
         if (vehicle.latitude === command.lat && vehicle.longitude === command.lng) {
-            throw new Error(`Vehicle ${command.vehiclePlateNumber} is already parked at location [${command.lat}, ${command.lng}]`);
+            throw new Error(`Vehicle ${command.vehiclePlateNumber} is already parked at location ${command.lat},${command.lng}`);
         }
         vehicle.latitude = command.lat
         vehicle.longitude = command.lng

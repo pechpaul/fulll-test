@@ -1,4 +1,6 @@
 import { DataSource as TypeORMDataSource } from 'typeorm';
+import {Vehicle} from "./Entities/vehicle.entity";
+import {Fleet} from "./Entities/fleet.entity";
 
 export const AppDataSource = new TypeORMDataSource({
     type: 'postgres',
@@ -8,6 +10,7 @@ export const AppDataSource = new TypeORMDataSource({
     password: '1234',
     database: 'postgres',
     logging: false,
-    entities: ['src/Infra/entities/*.ts'],
+    synchronize: true,
+    entities: [Fleet, Vehicle],
     subscribers: [],
 });

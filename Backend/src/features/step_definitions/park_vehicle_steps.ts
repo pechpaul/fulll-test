@@ -1,4 +1,4 @@
-import {Given, When, Then} from '@cucumber/cucumber';
+import {Given, When, Then, BeforeAll, AfterAll} from '@cucumber/cucumber';
 import { RegisterVehicleCommand } from '../../App/Command/vehicle/registerVehicle.command';
 import { RegisterVehicleHandler } from '../../App/Handler/vehicle/registerVehicle.handler';
 import { ParkVehicleCommand } from '../../App/Command/vehicle/parkVehicle.command';
@@ -6,6 +6,7 @@ import { ParkVehicleHandler } from '../../App/Handler/vehicle/parkVehicle.handle
 import {Fleet} from "../../Infra/Entities/fleet.entity";
 import {Vehicle} from "../../Infra/Entities/vehicle.entity";
 import {AppDataSource} from "../../Infra/dataSource";
+import {randomUUID} from "node:crypto";
 const assert = require('assert');
 
 const vehicleRepository = AppDataSource.getRepository(Vehicle);
@@ -17,14 +18,20 @@ let aVehicle: Vehicle;
 let aLocation: [number, number];
 let command: ParkVehicleCommand;
 
+BeforeAll(async function () {
+    if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+    }
+});
+
 Given('my fleet for parking', async () => {
-    await AppDataSource.initialize();
-    myFleet = new Fleet()
+    myFleet = fleetRepository.create({userId: randomUUID()})
+    await fleetRepository.save(myFleet)
 });
 
 Given('a vehicle for parking', async () => {
-    aVehicle = new Vehicle()
-    aVehicle.plateNumber = 'thisiaplatenumber'
+    aVehicle = vehicleRepository.create({plateNumber:randomUUID()})
+    await vehicleRepository.save(aVehicle)
 });
 
 Given('I have registered this vehicle into my fleet for parking', async () => {
@@ -56,3 +63,11 @@ Then('I should be informed that my vehicle is already parked at this location', 
     } catch (err :any) {
         assert(err.message === `Vehicle ${aVehicle.plateNumber} is already parked at location ${aLocation}`)
     }});
+
+
+AfterAll(async function () {
+    if (AppDataSource.isInitialized) {
+        await AppDataSource.destroy();
+        console.log('Database connection closed');
+    }
+});

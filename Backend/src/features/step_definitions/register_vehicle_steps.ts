@@ -1,10 +1,11 @@
-import {Given, When, Then} from '@cucumber/cucumber';
+import {Given, When, Then, BeforeAll, AfterAll} from '@cucumber/cucumber';
 import { RegisterVehicleCommand } from '../../App/Command/vehicle/registerVehicle.command';
 import { RegisterVehicleHandler } from '../../App/Handler/vehicle/registerVehicle.handler';
 import {Fleet} from "../../Infra/Entities/fleet.entity";
 import {Vehicle} from "../../Infra/Entities/vehicle.entity";
 import {FleetService} from "../../Domain/fleetService";
 import {AppDataSource} from "../../Infra/dataSource";
+import {randomUUID} from "node:crypto";
 const assert = require('assert');
 
 const vehicleRepository = AppDataSource.getRepository(Vehicle);
@@ -16,13 +17,19 @@ let anotherFleet: Fleet;
 let aVehicle: Vehicle;
 let command: RegisterVehicleCommand;
 
+BeforeAll(async function () {
+    if (!AppDataSource.isInitialized) {
+        await AppDataSource.initialize();
+    }
+});
+
 Given('my fleet', async () => {
-    await AppDataSource.initialize();
-    myFleet = new Fleet()
+    myFleet = fleetRepository.create({userId: randomUUID()})
+    await fleetRepository.save(myFleet)
 });
 
 Given('a vehicle', async () => {
-    aVehicle = new Vehicle()
+    aVehicle = vehicleRepository.create({plateNumber:randomUUID()})
     await vehicleRepository.save(aVehicle)
 });
 
@@ -54,11 +61,18 @@ Then('I should be informed this this vehicle has already been registered into my
 
 
 Given('the fleet of another user', async () => {
-    anotherFleet = new Fleet()
+    anotherFleet = new Fleet(randomUUID())
     await fleetRepository.save(anotherFleet)
 });
 
 Given('this vehicle has been registered into the other user\'s fleet', async () => {
     const command = new RegisterVehicleCommand(aVehicle.plateNumber, anotherFleet.id);
     await registerVehicleHandler.handle(command);
+});
+
+AfterAll(async function () {
+    if (AppDataSource.isInitialized) {
+        await AppDataSource.destroy();
+        console.log('Database connection closed');
+    }
 });

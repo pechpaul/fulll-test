@@ -18,6 +18,7 @@ export class RegisterVehicleHandler {
         if(!vehicle){
             throw new Error(`Vehicle ${command.plateNumber} doesn't exist`);
         }
+        fleet.vehicles = fleet.getVehicles()
 
         if (vehicle && fleet.vehicles.map((vehicle: Vehicle)=>vehicle.plateNumber).includes(vehicle.plateNumber)) {
             throw new Error(`this vehicle is already registered: ${command.plateNumber}`);

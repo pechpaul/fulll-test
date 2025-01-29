@@ -11,4 +11,12 @@ export class Fleet {
 
     @OneToMany(() => Vehicle, (vehicle) => vehicle.fleet)
     vehicles: Vehicle[];
+
+    constructor(userId: string) {
+        this.userId = userId;
+    }
+
+    getVehicles(): Vehicle[] {
+        return this.vehicles ?? [];
+    }
 }
