@@ -3,6 +3,7 @@ To run this project you will need a computer with Node, Typescript and Cucumber 
 
 # Install
 To install the project, you just have to run `npm install` to get all the dependencies
+Also start a postgreSQL DB and change the src/Infra/dataSource.ts file to match your logins
 
 # Running the tests
 After installing the dependencies you can run the tests with this command `npm run test`.
